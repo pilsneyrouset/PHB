@@ -1,8 +1,11 @@
 import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from functions.posthoc_bounds import linear_interpolation, interpolation, interpolation_minmax
+from functions import linear_interpolation, interpolation, interpolation_minmax
 
 class TestLinearInterpolation(unittest.TestCase):
     def setUp(self):
@@ -35,14 +38,9 @@ class TestLinearInterpolation(unittest.TestCase):
         self.assertEqual(assert_almost_equal(linear_interpolation(p_values, self.thresholds),[interpolation(np.sort(p_values)[:i], self.thresholds) for i in range(1, self.s+1)] ), None)
         self.assertEqual(linear_interpolation(p_values, self.thresholds, kmin=self.kmin)[-1], interpolation_minmax(p_values, self.thresholds, kmin=self.kmin, kmax=self.K))
 
-def run_tests():
+
+if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite = loader.loadTestsFromTestCase(TestLinearInterpolation)
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    return result
-
-run_tests()
-
-if __name__ == '__main__':
-    unittest.main()

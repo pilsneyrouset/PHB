@@ -1,7 +1,10 @@
 import unittest
-import numpy
+import numpy as np
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from functions.posthoc_bounds import interpolation, interpolation_naif
+from functions import interpolation, interpolation_naif
 
 class TestInterpolation(unittest.TestCase):
     def setUp(self):
@@ -28,14 +31,9 @@ class TestInterpolation(unittest.TestCase):
         p_values = np.random.beta(a=self.K, b=self.m - self.K + 1, size=self.s)
         self.assertEqual(interpolation(p_values, self.thresholds), interpolation_naif(p_values, self.thresholds))
 
-def run_tests():
+
+if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite = loader.loadTestsFromTestCase(TestInterpolation)
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    return result
-
-run_tests()
-
-if __name__ == '__main__':
-    unittest.main()

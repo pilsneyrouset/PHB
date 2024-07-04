@@ -79,7 +79,7 @@ def interpolation_minmax(p_values: list, thresholds: list, kmin: int, kmax: int,
             else:
                 return min(len(p_values) - i + zeta[kmax - 1], len(p_values))
     else:
-        for k in range(kmin, min(kmax, len(p_values))):
+        for k in range(kmin, kmax):
             i = i_start
             while i < len(p_values) and p_values[i] < thresholds[k]:
                     i += 1
@@ -121,19 +121,23 @@ def linear_interpolation(p_values : list, thresholds: list, kmin: int=0)-> list:
     return V
 
 
-def linear_interpolation_zeta(p_values: list, thresholds: list, zeta, kmin: int=0) -> list:
+def linear_interpolation_zeta(p_values: list, thresholds: list, zeta: list, kmin: int=0) -> list:
     p_values = np.sort(p_values)
     s = len(p_values)
     K = len(thresholds)
-    tau = np.zeros(K)
     K = max(s, K)
+    tau = np.zeros(K)
+    ksi = np.zeros(K)
     for k in range(K):
         if k < kmin:
             tau[k] = 0
+            ksi[k] = zeta[k]
         elif kmin <= k < len(thresholds):
             tau[k] = thresholds[k]
+            ksi[k] = zeta[k]
         else:
             tau[k] = thresholds[len(thresholds)-1]
+            ksi[k] = zeta[len(thresholds)-1]
     kappa = np.ones(K, dtype=int)*K
     r = np.ones(K, dtype=int)*s
     k, i = 0, 0
@@ -144,13 +148,16 @@ def linear_interpolation_zeta(p_values: list, thresholds: list, zeta, kmin: int=
         else:
             r[k] = i
             k += 1
-    V, A, M = np.zeros(s), np.zeros(K), np.zeros(K)
+    V, A, M = np.ones(s)*ksi[0], np.zeros(K), np.zeros(K)
     M[0] = r[0]
     for k in range(K):
-        A[k] = r[k] - zeta[k]
+        A[k] = r[k] - ksi[k]
         if k > 0:
             M[k] = max(M[k-1], A[k])
     for i in range(s):
         if kappa[i] > 0:
-            V[i] = int(min(zeta[kappa[i]], i+1 - M[kappa[i]-1]))
+            if kappa[i] != K:
+                V[i] = int(min(ksi[kappa[i]], i+1 - M[kappa[i]-1]))
+            else:
+                V[i] = int(i+1 - M[kappa[i]-1])
     return V

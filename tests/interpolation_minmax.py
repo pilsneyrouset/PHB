@@ -1,7 +1,10 @@
 import unittest
 import numpy as np
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from functions.posthoc_bounds import interpolation_minmax, interpolation_minmax_naif
+from functions import interpolation_minmax, interpolation_minmax_naif
 
 class TestInterpolationMinmax(unittest.TestCase):
     def setUp(self):
@@ -36,14 +39,8 @@ class TestInterpolationMinmax(unittest.TestCase):
         self.assertEqual(interpolation_minmax(p_values, self.thresholds, kmin=0, kmax=0), interpolation_minmax_naif(p_values, self.thresholds, kmin=0, kmax=0))
 
 
-def run_tests():
+if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite = loader.loadTestsFromTestCase(TestInterpolationMinmax)
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    return result
-
-run_tests()
-
-if __name__ == '__main__':
-    unittest.main()
