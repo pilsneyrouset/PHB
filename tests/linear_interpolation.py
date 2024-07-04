@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-from posthoc_bounds import linear_interpolation, interpolation, interpolation_minmax
+from functions.posthoc_bounds import linear_interpolation, interpolation, interpolation_minmax
 
 class TestLinearInterpolation(unittest.TestCase):
     def setUp(self):

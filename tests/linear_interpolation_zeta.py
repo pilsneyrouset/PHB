@@ -2,7 +2,7 @@ import numpy as np
 import unittest
 from numpy.testing import assert_almost_equal
 
-from posthoc_bounds import linear_interpolation_zeta, interpolation
+from functions.posthoc_bounds import linear_interpolation_zeta, interpolation
 
 class TestInterpolationZeta(unittest.TestCase):
     def setUp(self):

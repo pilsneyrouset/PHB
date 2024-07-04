@@ -30,7 +30,7 @@ def interpolation(p_values: list, thresholds: list, zeta: list=[k for k in range
         while i < len(p_values) and p_values[i] < thresholds[k]:
             i += 1
             i_start = i
-        B.append(len(p_values) - i + zeta[k]) # k est un cas particulier de Zeta_k
+        B.append(len(p_values) - i + zeta[k])
     return min(min(B), len(p_values))
 
 
@@ -84,7 +84,7 @@ def interpolation_minmax(p_values: list, thresholds: list, kmin: int, kmax: int,
             while i < len(p_values) and p_values[i] < thresholds[k]:
                     i += 1
                     i_start = i
-            B.append(len(p_values) - i + zeta[k]) # k est un cas particulier de Zeta_k
+            B.append(len(p_values) - i + zeta[k])
         return min(min(B), len(p_values))
 
 
@@ -153,4 +153,4 @@ def linear_interpolation_zeta(p_values: list, thresholds: list, zeta, kmin: int=
     for i in range(s):
         if kappa[i] > 0:
             V[i] = int(min(zeta[kappa[i]], i+1 - M[kappa[i]-1]))
-    return V 
+    return V
