@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import sanssouci
+import warnings
 
 
 def interpolation_naif(p_values: list, thresholds: list, zeta: list=[k for k in range(5000)]) -> int:
@@ -149,7 +149,7 @@ def linear_interpolation_zeta(p_values: list, thresholds: list, zeta: list, kmin
             r[k] = i
             k += 1
     V, A, M = np.ones(s)*ksi[0], np.zeros(K), np.zeros(K)
-    M[0] = r[0]
+    M[0] = max(r[0] - ksi[0], 0)
     for k in range(K):
         A[k] = r[k] - ksi[k]
         if k > 0:
@@ -161,3 +161,24 @@ def linear_interpolation_zeta(p_values: list, thresholds: list, zeta: list, kmin
             else:
                 V[i] = int(i+1 - M[kappa[i]-1])
     return V
+
+
+def argmin_indice(p_values: list, thresholds: list, kmin: int, kmax: int, zeta: list= [k for k in range(5000)]) -> int:
+    p_values = np.sort(p_values)
+    B = []
+    i_start = 0
+    if kmin == kmax:
+       warnings.warn('Attention, la liste de p-valeurs est vide')
+       return -1
+    else:
+        for k in range(kmin, kmax):
+            i = i_start
+            while i < len(p_values) and p_values[i] < thresholds[k]:
+                    i += 1
+                    i_start = i
+            B.append(len(p_values) - i + zeta[k])
+        if min(B) < len(p_values):
+            return np.argmin(B)
+        else:
+            print("Nous avons la borne triviale")
+            return -1
