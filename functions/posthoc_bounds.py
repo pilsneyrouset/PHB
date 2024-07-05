@@ -3,8 +3,27 @@ import matplotlib.pyplot as plt
 import warnings
 
 
-def interpolation_naif(p_values: list, thresholds: list, zeta: list=[k for k in range(5000)]) -> int:
-    "Naive calculus posthoc bounds"
+def interpolation_naif(p_values: list, thresholds: list, zeta: list) -> int:
+    """
+    Naive method to compute an upper bound for the number of false discoveries among most
+    significant items.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+    thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    -------
+
+    int:
+        An upper bound for the number of false discoveries among
+        the given items
+    """
     p_values = np.sort(p_values)
     K = len(thresholds)
     kmax = min(len(p_values), K)
@@ -18,8 +37,27 @@ def interpolation_naif(p_values: list, thresholds: list, zeta: list=[k for k in 
     return min(min(B), len(p_values))
 
 
-def interpolation(p_values: list, thresholds: list, zeta: list=[k for k in range(5000)]) -> int:
-    "Calcul posthoc bounds"
+def interpolation(p_values: list, thresholds: list, zeta: list) -> int:
+    """
+    Upper bound for the number of false discoveries among most
+    significant items.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+    thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    -------
+
+    int:
+        An upper bound for the number of false discoveries among
+        the given items
+    """
     p_values = np.sort(p_values)
     K = len(thresholds)
     kmax = min(len(p_values), K)
@@ -34,7 +72,27 @@ def interpolation(p_values: list, thresholds: list, zeta: list=[k for k in range
     return min(min(B), len(p_values))
 
 
-def interpolation_bis(p_values: list, thresholds:list, zeta: list=[k for k in range(5000)]) -> int:
+def interpolation_bis(p_values: list, thresholds:list, zeta: list) -> int:
+    """
+    Upper bound for the number of false discoveries among most
+    significant items.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+        thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    -------
+
+    int :
+        An upper bound for the number of false discoveries among
+        the given p-values
+    """
     p_values = np.sort(p_values)
     s = len(p_values)
     K = len(thresholds)
@@ -50,11 +108,31 @@ def interpolation_bis(p_values: list, thresholds:list, zeta: list=[k for k in ra
     return min(min(B), len(p_values))
 
 
-def interpolation_minmax_naif(p_values: list, thresholds: list, kmin:int, kmax: int, zeta: list=[k for k in range(5000)]) -> int:
-    "Naive calculus of the posthoc bounds with kmin and kmax"
+def interpolation_minmax_naif(p_values: list, thresholds: list, kmin:int, kmax: int, zeta: list) -> int:
+    """
+    Naive method to compute and upper bound for the number of false discoveries among most
+    significant items.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+        thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    -------
+
+    int :
+        An upper bound for the number of false discoveries among
+        the given p-values for the indexes between kmin and kmax
+    """
     p_values = np.sort(p_values)
     B = []
     if kmin == kmax:
+        warnings.warn("Attention, la liste de p-valeurs est vide. La borne triviale est renvoyée")
         return len(p_values)
     else:
         for k in range(kmin, kmax):
@@ -66,18 +144,33 @@ def interpolation_minmax_naif(p_values: list, thresholds: list, kmin:int, kmax: 
         return min(min(B), len(p_values))
 
 
-def interpolation_minmax(p_values: list, thresholds: list, kmin: int, kmax: int, zeta: list= [k for k in range(5000)]) -> int:
-    "La bound posthoc est calculée pour les k compris entre kmin et kmax"
+def interpolation_minmax(p_values: list, thresholds: list, kmin: int, kmax: int, zeta: list) -> int:
+    """
+    Upper bound for the number of false discoveries among most
+    significant items.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+    thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    -------
+
+    int:
+        An upper bound for the number of false discoveries among
+        the given p-values for the indexes between kmin and kmax
+    """
     p_values = np.sort(p_values)
     B = []
     i_start = 0
     if kmin == kmax:
-        i = 0
-        while i < len(p_values):
-            if p_values[i] < thresholds[kmax - 1]:
-                i += 1
-            else:
-                return min(len(p_values) - i + zeta[kmax - 1], len(p_values))
+       warnings.warn("Attention, la liste de p-valeurs est vide. La borne triviale est renvoyée")
+       return len(p_values)
     else:
         for k in range(kmin, kmax):
             i = i_start
@@ -89,6 +182,35 @@ def interpolation_minmax(p_values: list, thresholds: list, kmin: int, kmax: int,
 
 
 def linear_interpolation(p_values : list, thresholds: list, kmin: int=0)-> list:
+    """
+    Upper bound for the number of false discoveries among most
+    significant items in the case zeta_k=k-1.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+    thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    -------
+
+    numpy.array :
+        A vector of size p giving an joint upper confidence bound on the
+        number of false discoveries among the k most significant items for
+        all k in \{1,\ldots,m\}
+
+    References
+    ----------
+
+    .. [1] Blanchard, G., Neuvial, P., & Roquain, E. (2020). Post hoc
+        confidence bounds on false positives using reference families.
+        Annals of Statistics, 48(3), 1281-1303.    
+    """
+
     p_values = np.sort(p_values)
     s = len(p_values)
     K = len(thresholds)
@@ -122,6 +244,34 @@ def linear_interpolation(p_values : list, thresholds: list, kmin: int=0)-> list:
 
 
 def linear_interpolation_zeta(p_values: list, thresholds: list, zeta: list, kmin: int=0) -> list:
+    """
+    Upper bound for the number of false discoveries among most
+    significant items in the general case.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+    thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    -------
+
+    numpy.array :
+        A vector of size p giving an joint upper confidence bound on the
+        number of false discoveries among the k most significant items for
+        all k in \{1,\ldots,m\}
+
+    References
+    ----------
+
+    .. [1] Blanchard, G., Neuvial, P., & Roquain, E. (2020). Post hoc
+        confidence bounds on false positives using reference families.
+        Annals of Statistics, 48(3), 1281-1303.
+    """
     p_values = np.sort(p_values)
     s = len(p_values)
     K = len(thresholds)
@@ -163,7 +313,21 @@ def linear_interpolation_zeta(p_values: list, thresholds: list, zeta: list, kmin
     return V
 
 
-def argmin_indice(p_values: list, thresholds: list, kmin: int, kmax: int, zeta: list= [k for k in range(5000)]) -> int:
+def argmin_indice(p_values: list, thresholds: list, kmin: int, kmax: int, zeta: list) -> int:
+    """Upper bound for the number of false discoveries among most
+    significant items.
+
+    Parameters
+    ----------
+
+    p_values : 1D numpy.array
+        A 1D numpy array containing all p-values,sorted non-decreasingly
+    thresholds : 1D numpy.array
+        A 1D numpy array  of K JER-controlling thresholds,
+        sorted non-decreasingly
+
+    Returns
+    """
     p_values = np.sort(p_values)
     B = []
     i_start = 0
@@ -180,5 +344,5 @@ def argmin_indice(p_values: list, thresholds: list, kmin: int, kmax: int, zeta: 
         if min(B) < len(p_values):
             return np.argmin(B)
         else:
-            print("Nous avons la borne triviale")
+            warnings.warn("Nous avons la borne triviale, l'indice renvoyé est -1")
             return -1
