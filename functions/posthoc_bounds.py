@@ -181,7 +181,7 @@ def interpolation_minmax(p_values: list, thresholds: list, kmin: int, kmax: int,
         return min(min(B), len(p_values))
 
 
-def linear_interpolation(p_values : list, thresholds: list, kmin: int=0)-> list:
+def linear_interpolation(p_values : list, thresholds: list)-> list:
     """
     Upper bound for the number of false discoveries among most
     significant items in the case zeta_k=k-1.
@@ -216,9 +216,7 @@ def linear_interpolation(p_values : list, thresholds: list, kmin: int=0)-> list:
     K = len(thresholds)
     tau = np.zeros(s)
     for k in range(s):
-        if k < kmin:
-            tau[k] = 0
-        elif kmin <= k < K:
+        if k < K:
             tau[k] = thresholds[k]
         else:
             tau[k] = thresholds[K-1]
