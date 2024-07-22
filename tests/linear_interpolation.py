@@ -13,7 +13,7 @@ class TestLinearInterpolation(unittest.TestCase):
         self.alpha = 0.9
         self.K = 700  # length of the template
         self.s = 600  # length of the region we are interested in
-        self.thresholds = np.array([self.alpha * k / self.m for k in range(self.K)])
+        self.thresholds = np.array([self.alpha * k / self.m + 0.01 for k in range(self.K)])
         self.kmin = np.random.randint(low=1, high=self.K)
         self.zeta = [k for k in range(self.K)]
     

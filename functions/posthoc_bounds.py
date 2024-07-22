@@ -233,6 +233,7 @@ def linear_interpolation(p_values : list, thresholds: list, kmin: int=0)-> list:
             r[k] = i
             k += 1
     V, A, M = np.zeros(s), np.zeros(s), np.zeros(s)
+    M[0] = r[0]
     for k in range(s):
         A[k] = r[k] - k
         if k > 0:
